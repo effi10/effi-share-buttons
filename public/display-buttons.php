@@ -7,20 +7,36 @@ if (!defined('WPINC')) {
 
 /**
  * Fonction principale pour obtenir le HTML des boutons.
+ *
+ * @param array    $attributes Les attributs du bloc.
+ * @param string   $content    Le contenu interne du bloc.
+ * @param WP_Block $block      L'instance du bloc pour accéder au contexte.
+ * @return string Le HTML des boutons.
  */
-function esb_get_buttons_html() {
-    if (!get_the_ID()) {
+function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
+    // --- CORRECTION : Obtenir l'ID du post de manière fiable ---
+    $post_id = 0;
+    if (isset($block->context['postId'])) {
+        // Méthode N°1 : La plus fiable pour un bloc dynamique.
+        $post_id = $block->context['postId'];
+    } elseif (get_the_ID()) {
+        // Méthode N°2 : Fallback pour les appels via le filtre the_content.
+        $post_id = get_the_ID();
+    }
+
+    // Si on n'a toujours pas d'ID, on ne peut rien faire.
+    if (!$post_id) {
         return '';
     }
+    // --- FIN DE LA CORRECTION ---
 
     $options = get_option('esb_settings', []);
     $active_buttons = isset($options['active_buttons']) ? $options['active_buttons'] : [];
 
     if (empty($active_buttons)) {
-        return '';
+        return ''; // Ne rien afficher si aucun bouton n'est actif.
     }
 
-    $post_id = get_the_ID();
     $post_url = get_permalink($post_id);
     $post_title = get_the_title($post_id);
     $encoded_url = urlencode($post_url);
@@ -77,10 +93,9 @@ function esb_get_buttons_html() {
     return $buttons_html;
 }
 
-/* --- Fonctions de Hook pour l'affichage automatique (CORRIGÉES) --- */
+/* --- Fonctions de Hook pour l'affichage automatique (Inchangées) --- */
 
 function esb_add_buttons_before_content($content) {
-    // On utilise is_singular('post') pour ne cibler que les articles.
     if (is_singular('post')) {
         return esb_get_buttons_html() . $content;
     }
