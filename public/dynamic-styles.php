@@ -6,60 +6,86 @@ if (!defined('WPINC')) {
 }
 
 function esb_enqueue_dynamic_styles() {
+    // On ne charge les styles que si on n'est pas dans l'admin
+    if (is_admin()) {
+        return;
+    }
+
+    // Récupérer les options de la base de données
     $options = get_option('esb_settings', []);
-    
-    // Valeurs par défaut pour le style
+
+    // --- DÉBUT DE LA CORRECTION ---
+    // Définir des valeurs par défaut robustes pour TOUS les réglages de style
+    $defaults = [
+        'button_size'   => 'medium',
+        'border_radius' => 'rounded',
+        'active_buttons' => [],
+        'colors' => [
+            'chatgpt'    => ['bg' => '#ff0000', 'text' => '#ffffff'],
+            'perplexity' => ['bg' => '#6f42c1', 'text' => '#ffffff'],
+            'grok'       => ['bg' => '#1c1c1e', 'text' => '#ffffff'],
+            'google_ai'  => ['bg' => '#4285F4', 'text' => '#ffffff'],
+            'whatsapp'   => ['bg' => '#25D366', 'text' => '#ffffff'],
+            'linkedin'   => ['bg' => '#0077b5', 'text' => '#ffffff'],
+            'x'          => ['bg' => '#000000', 'text' => '#ffffff'],
+        ],
+    ];
+
+    // Fusionner les options de la BDD avec les valeurs par défaut
+    // Si une option n'est pas définie, la valeur par défaut sera utilisée.
+    $options = array_replace_recursive($defaults, $options);
+    // --- FIN DE LA CORRECTION ---
+
+
     $size_map = [
-        'small' => ['padding' => '6px 12px', 'font-size' => '12px'],
+        'small'  => ['padding' => '6px 12px', 'font-size' => '12px'],
         'medium' => ['padding' => '8px 16px', 'font-size' => '14px'],
-        'large' => ['padding' => '12px 22px', 'font-size' => '16px'],
+        'large'  => ['padding' => '12px 22px', 'font-size' => '16px'],
     ];
     $radius_map = [
         'rounded' => '25px',
-        'square' => '4px'
+        'square'  => '4px'
     ];
     
-    $button_size = isset($options['button_size']) ? $options['button_size'] : 'medium';
-    $border_radius = isset($options['border_radius']) ? $options['border_radius'] : 'rounded';
+    // On peut maintenant utiliser les options en toute sécurité
+    $button_size   = $options['button_size'];
+    $border_radius = $options['border_radius'];
 
-    $padding = $size_map[$button_size]['padding'];
+    $padding   = $size_map[$button_size]['padding'];
     $font_size = $size_map[$button_size]['font-size'];
-    $radius = $radius_map[$border_radius];
+    $radius    = $radius_map[$border_radius];
 
     $css = "
-    .ssb-container {
+    .esb-container {
         margin: 20px 0;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
         align-items: center;
     }
-    .ssb-button {
+    .esb-button {
         display: inline-block;
         padding: {$padding};
         font-size: {$font_size};
         border-radius: {$radius};
         font-weight: bold;
-        text-decoration: none;
+        text-decoration: none !important;
         transition: opacity 0.2s ease;
-		text-decoration: none !important;
+        line-height: 1.2;
     }
-    .ssb-button:hover {
+    .esb-button:hover {
         opacity: 0.85;
     }
     ";
     
     // Générer le CSS pour chaque bouton actif
-    $services = esb_get_available_services();
-    $active_buttons = isset($options['active_buttons']) ? $options['active_buttons'] : [];
-
-    foreach ($services as $id => $label) {
-        if (isset($active_buttons[$id])) {
+    foreach ($options['active_buttons'] as $id => $is_active) {
+        if ($is_active) {
             $colors = $options['colors'][$id];
-            $bg = esc_attr($colors['bg']);
-            $text = esc_attr($colors['text']);
+            $bg     = esc_attr($colors['bg']);
+            $text   = esc_attr($colors['text']);
             $css .= "
-            .ssb-button-{$id} {
+            .esb-button-{$id} {
                 background-color: {$bg};
                 color: {$text};
             }
@@ -67,8 +93,10 @@ function esb_enqueue_dynamic_styles() {
         }
     }
 
-    // Injecter le CSS
-    wp_register_style('ssb-dynamic-styles', false);
-    wp_enqueue_style('ssb-dynamic-styles');
-    wp_add_inline_style('ssb-dynamic-styles', $css);
+    // N'injecter le CSS que s'il n'est pas vide
+    if (!empty(trim($css))) {
+        wp_register_style('esb-dynamic-styles', false);
+        wp_enqueue_style('esb-dynamic-styles');
+        wp_add_inline_style('esb-dynamic-styles', $css);
+    }
 }
