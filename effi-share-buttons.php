@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       effi Share Buttons
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
- * Version:           1.0
+ * Version:           1.3
  * Author:            Cédric GIRARD
  * Text Domain:       effi-share-buttons
  */
@@ -12,7 +12,13 @@ if (!defined('WPINC')) {
     die;
 }
 
-// Fonction utilitaire pour la liste des services
+// ---- Fichiers requis (inchangé) ----
+// On s'assure que toutes nos fonctions sont disponibles.
+require_once plugin_dir_path(__FILE__) . 'admin/settings-page.php';
+require_once plugin_dir_path(__FILE__) . 'public/display-buttons.php';
+require_once plugin_dir_path(__FILE__) . 'public/dynamic-styles.php';
+
+// ---- Fonctions utilitaires (inchangé) ----
 function esb_get_available_services() {
     return [
         'chatgpt' => 'ChatGPT',
@@ -25,29 +31,41 @@ function esb_get_available_services() {
     ];
 }
 
-// --- VÉRIFICATION N°1 : Les fichiers sont-ils bien inclus ? ---
-// Ces lignes sont essentielles pour que les fonctions existent quand WordPress les appelle.
-require_once plugin_dir_path(__FILE__) . 'admin/settings-page.php';
-require_once plugin_dir_path(__FILE__) . 'public/display-buttons.php';
-require_once plugin_dir_path(__FILE__) . 'public/dynamic-styles.php';
-
-
-// --- VÉRIFICATION N°2 : La fonction d'initialisation est-elle correcte ? ---
 /**
- * Initialise le plugin, enregistre le bloc et les filtres.
+ * Étape 1 : Enregistrer le bloc Gutenberg.
+ * Cette fonction s'assure que WordPress connaît votre bloc, que ce soit
+ * dans l'administration ou sur le site public.
  */
-function esb_init() {
-    
-    // Enregistrement du bloc Gutenberg.
-    register_block_type(plugin_dir_path( __FILE__ ) . '/block');
+function esb_register_block() {
+    register_block_type(
+        plugin_dir_path(__FILE__) . 'block', // Chemin vers le dossier du bloc
+        [
+            'render_callback' => 'esb_get_buttons_html' // C'est LA modification cruciale
+        ]
+    );
+}
+// On l'accroche au crochet 'init', ce qui est la pratique standard.
+add_action('init', 'esb_register_block');
 
-    // On ne charge les filtres que sur la partie publique du site
+/**
+ * Étape 2 : Gérer l'affichage automatique des boutons.
+ * Cette fonction ajoute les boutons avant ou après le contenu,
+ * en respectant le choix fait dans les réglages.
+ */
+function esb_setup_automatic_display() {
+    // On ne fait rien si on est dans l'éditeur ou une page d'administration.
     if (is_admin()) {
         return;
     }
 
     $options = get_option('esb_settings');
     $position = isset($options['position']) ? $options['position'] : 'after_content';
+
+    // Si l'option est de n'afficher QUE le bloc, on n'ajoute aucun filtre.
+    // C'est un comportement voulu et maintenant très clair.
+    if ($position === 'block_only') {
+        return;
+    }
 
     switch ($position) {
         case 'before_content':
@@ -61,11 +79,24 @@ function esb_init() {
             break;
     }
 }
-
-// --- VÉRIFICATION N°3 : L'action est-elle bien "accrochée" à WordPress ? ---
-// Sans cette ligne, la fonction esb_init() n'est JAMAIS exécutée par WordPress.
-add_action('init', 'esb_init');
+// On accroche aussi cette fonction à 'init'. WordPress gérera l'ordre.
+add_action('init', 'esb_setup_automatic_display');
 
 
-// Action pour charger les styles dynamiques sur la partie publique
-add_action('wp_enqueue_scripts', 'esb_enqueue_dynamic_styles');
+function esb_enqueue_frontend_assets() {
+    // Charger les styles dynamiques (déplacé depuis l'ancienne fonction)
+    esb_enqueue_dynamic_styles();
+
+    // Charger le script pour la gestion des clics sur les boutons
+    wp_enqueue_script(
+        'esb-frontend-script',
+        plugin_dir_url(__FILE__) . 'public/js/frontend.js',
+        [], // Dépendances
+        '1.0.0', // Version
+        true // Charger dans le pied de page
+    );
+}
+
+// ---- Chargement des styles (inchangé) ----
+// Cette partie était déjà correcte. Elle ne s'exécute que sur le front-office.
+add_action('wp_enqueue_scripts', 'esb_enqueue_frontend_assets');

@@ -14,6 +14,7 @@ if (!defined('WPINC')) {
  * @return string Le HTML des boutons.
  */
 function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
+	
     // --- CORRECTION : Obtenir l'ID du post de manière fiable ---
     $post_id = 0;
     if (isset($block->context['postId'])) {
@@ -81,10 +82,11 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
                 break;
         }
 
+        // Affichage du bouton 
         $buttons_html .= sprintf(
-            '<a href="%s" target="_blank" rel="noopener noreferrer" class="esb-button esb-button-%s">%s</a>',
-            esc_url($url),
+            '<button type="button" class="esb-button esb-share-button esb-button-%s" data-url="%s">%s</button>',
             esc_attr($id),
+            esc_url($url),
             esc_html($label)
         );
     }
@@ -96,21 +98,31 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
 /* --- Fonctions de Hook pour l'affichage automatique (Inchangées) --- */
 
 function esb_add_buttons_before_content($content) {
-    if (is_singular('post')) {
+    $options = get_option('esb_settings', []);
+    // On récupère les clés du tableau (ex: ['post', 'page']) ou on utilise ['post'] par défaut.
+    $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
+
+    if (is_singular($selected_post_types)) {
         return esb_get_buttons_html() . $content;
     }
     return $content;
 }
 
 function esb_add_buttons_after_content($content) {
-    if (is_singular('post')) {
+    $options = get_option('esb_settings', []);
+    $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
+    
+    if (is_singular($selected_post_types)) {
         return $content . esb_get_buttons_html();
     }
     return $content;
 }
 
 function esb_add_buttons_before_and_after($content) {
-     if (is_singular('post')) {
+    $options = get_option('esb_settings', []);
+    $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
+
+    if (is_singular($selected_post_types)) {
         $buttons = esb_get_buttons_html();
         return $buttons . $content . $buttons;
     }

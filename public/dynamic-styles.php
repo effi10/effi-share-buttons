@@ -14,7 +14,6 @@ function esb_enqueue_dynamic_styles() {
     // Récupérer les options de la base de données
     $options = get_option('esb_settings', []);
 
-    // --- DÉBUT DE LA CORRECTION ---
     // Définir des valeurs par défaut robustes pour TOUS les réglages de style
     $defaults = [
         'button_size'   => 'medium',
@@ -34,8 +33,14 @@ function esb_enqueue_dynamic_styles() {
     // Fusionner les options de la BDD avec les valeurs par défaut
     // Si une option n'est pas définie, la valeur par défaut sera utilisée.
     $options = array_replace_recursive($defaults, $options);
-    // --- FIN DE LA CORRECTION ---
 
+    $alignment_map = [
+        'left' => 'flex-start',
+        'center' => 'center',
+        'right' => 'flex-end',
+    ];
+    $alignment_value = isset($options['alignment']) ? $options['alignment'] : 'left';
+    $justify_content = $alignment_map[$alignment_value];
 
     $size_map = [
         'small'  => ['padding' => '6px 12px', 'font-size' => '12px'],
@@ -62,6 +67,7 @@ function esb_enqueue_dynamic_styles() {
         gap: 10px;
         flex-wrap: wrap;
         align-items: center;
+        justify-content: {$justify_content}; /* LIGNE MODIFIÉE/AJOUTÉE */
     }
     .esb-button {
         display: inline-block;
@@ -72,6 +78,8 @@ function esb_enqueue_dynamic_styles() {
         text-decoration: none !important;
         transition: opacity 0.2s ease;
         line-height: 1.2;
+        border: none; /* AJOUT: pour réinitialiser le style des boutons */
+        cursor: pointer; /* AJOUT: pour montrer que c'est cliquable */
     }
     .esb-button:hover {
         opacity: 0.85;
@@ -85,9 +93,10 @@ function esb_enqueue_dynamic_styles() {
             $bg     = esc_attr($colors['bg']);
             $text   = esc_attr($colors['text']);
             $css .= "
-            .esb-button-{$id} {
-                background-color: {$bg};
-                color: {$text};
+            .esb-button-{$id},
+            .esb-button-{$id}:hover {
+                background-color: {$bg} !important;
+                color: {$text} !important;
             }
             ";
         }

@@ -45,6 +45,8 @@ function esb_settings_init() {
     add_settings_section('esb_general_section', 'General Settings', null, 'super_share_buttons');
 
     add_settings_field('esb_position_field', 'Button Position', 'esb_position_field_cb', 'super_share_buttons', 'esb_general_section');
+	add_settings_field('esb_post_types_field', 'Automatic display on', 'esb_post_types_field_cb', 'super_share_buttons', 'esb_general_section');
+	
     add_settings_field('esb_active_buttons_field', 'Active Buttons', 'esb_active_buttons_field_cb', 'super_share_buttons', 'esb_general_section');
 
     // Section 2 : Textes et Prompts
@@ -66,6 +68,7 @@ function esb_settings_init() {
     // Section 3 : Style des boutons
     add_settings_section('esb_styling_section', 'Button Styling', null, 'super_share_buttons');
     
+	add_settings_field('esb_alignment_field', 'Button Alignment', 'esb_alignment_field_cb', 'super_share_buttons', 'esb_styling_section');
     add_settings_field('esb_button_size_field', 'Button Size', 'esb_button_size_field_cb', 'super_share_buttons', 'esb_styling_section');
     add_settings_field('esb_border_radius_field', 'Border Style', 'esb_border_radius_field_cb', 'super_share_buttons', 'esb_styling_section');
 
@@ -87,6 +90,46 @@ add_action('admin_init', 'esb_settings_init');
 
 $options = get_option('esb_settings');
 
+function esb_post_types_field_cb() {
+    global $options;
+    $post_types = get_post_types(['public' => true], 'objects');
+    $selected_post_types = isset($options['post_types']) ? $options['post_types'] : ['post' => '1']; // Par défaut, on coche 'post'
+
+    echo '<fieldset>';
+    foreach ($post_types as $post_type) {
+        if ($post_type->name === 'attachment') {
+            continue; // On ignore les pièces jointes
+        }
+        $is_checked = isset($selected_post_types[$post_type->name]);
+        ?>
+        <label style="margin-right: 15px;">
+            <input 
+                type="checkbox" 
+                name="esb_settings[post_types][<?php echo esc_attr($post_type->name); ?>]" 
+                value="1" 
+                <?php checked($is_checked); ?>
+            >
+            <?php echo esc_html($post_type->labels->singular_name); ?>
+        </label>
+        <?php
+    }
+    echo '</fieldset>';
+    echo '<p class="description">Select the content types where buttons should be automatically displayed.</p>';
+}
+
+function esb_alignment_field_cb() {
+    global $options;
+    $alignment = isset($options['alignment']) ? $options['alignment'] : 'left';
+    ?>
+    <select name="esb_settings[alignment]">
+        <option value="left" <?php selected($alignment, 'left'); ?>>Left</option>
+        <option value="center" <?php selected($alignment, 'center'); ?>>Center</option>
+        <option value="right" <?php selected($alignment, 'right'); ?>>Right</option>
+    </select>
+    <p class="description">Choose the alignment for the button container.</p>
+    <?php
+}
+
 function esb_position_field_cb() {
     global $options;
     $position = isset($options['position']) ? $options['position'] : 'after_content';
@@ -95,7 +138,6 @@ function esb_position_field_cb() {
         <option value="after_content" <?php selected($position, 'after_content'); ?>>After Content</option>
         <option value="before_content" <?php selected($position, 'before_content'); ?>>Before Content</option>
         <option value="both" <?php selected($position, 'both'); ?>>Before and After Content</option>
-        <option value="none" <?php selected($position, 'none'); ?>>Don't Display Automatically</option>
         <option value="block_only" <?php selected($position, 'block_only'); ?>>Only with the Gutenberg Block</option>
     </select>
     <p class="description">Choose where to display the share buttons automatically.</p>
@@ -109,6 +151,7 @@ function esb_active_buttons_field_cb() {
         $checked = isset($options['active_buttons'][$id]) ? 'checked' : '';
         echo "<label style='margin-right: 15px;'><input type='checkbox' name='esb_settings[active_buttons][{$id}]' value='1' {$checked}> {$label}</label>";
     }
+	echo "<p class='description'>* Google AI doesn't work in France</p>";
 }
 
 function esb_prompt_field_cb($args) {
@@ -131,7 +174,9 @@ function esb_prompt_field_cb($args) {
     }
 
     echo "<input type='text' name='esb_settings[prompts][{$id}]' value='{$value}' class='regular-text'>";
-    echo '<p class="description">Use {URL} for the post link and {TITLE} for the post title.</p>';
+    
+	echo '<p class="description">Use {URL} for the post link and {TITLE} for the post title.</p>';		
+	
 }
 
 function esb_x_handle_field_cb() {

@@ -9,6 +9,5 @@
     "textdomain": "effi-share-buttons",
     "editorScript": "file:./index.js",
     "attributes": {},
-    "usesContext": [ "postId", "postType" ],
-    "render": "esb_get_buttons_html"
+    "usesContext": [ "postId", "postType" ]
 }
