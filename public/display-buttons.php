@@ -1,0 +1,103 @@
+<?php
+// public/display-buttons.php
+
+if (!defined('WPINC')) {
+    die;
+}
+
+/**
+ * Fonction principale pour obtenir le HTML des boutons.
+ */
+function esb_get_buttons_html() {
+    if (!get_the_ID()) {
+        return '';
+    }
+
+    $options = get_option('esb_settings', []);
+    $active_buttons = isset($options['active_buttons']) ? $options['active_buttons'] : [];
+
+    if (empty($active_buttons)) {
+        return '';
+    }
+
+    $post_id = get_the_ID();
+    $post_url = get_permalink($post_id);
+    $post_title = get_the_title($post_id);
+    $encoded_url = urlencode($post_url);
+    $encoded_title = urlencode($post_title);
+    
+    $buttons_html = '<div class="esb-container">';
+    $services = esb_get_available_services();
+
+    foreach ($services as $id => $label) {
+        if (!isset($active_buttons[$id])) {
+            continue;
+        }
+
+        $prompt_template = isset($options['prompts'][$id]) ? $options['prompts'][$id] : '';
+        $final_text = str_replace(['{URL}', '{TITLE}'], [$post_url, $post_title], $prompt_template);
+        $encoded_text = urlencode($final_text);
+
+        $url = '#';
+        switch ($id) {
+            case 'chatgpt':
+                $url = 'https://chat.openai.com/?q=' . $encoded_text;
+                break;
+            case 'perplexity':
+                $url = 'https://www.perplexity.ai/search?q=' . $encoded_text;
+                break;
+            case 'grok':
+                $url = 'https://x.com/i/grok?text=' . $encoded_text;
+                break;
+            case 'google_ai':
+                $url = 'https://www.google.com/search?udm=50&aep=11&q=' . $encoded_text;
+                break;
+            case 'whatsapp':
+                $url = 'https://wa.me/?text=' . $encoded_text;
+                break;
+            case 'linkedin':
+                $url = "https://www.linkedin.com/sharing/share-offsite/?url={$encoded_url}";
+                break;
+            case 'x':
+                $x_handle = isset($options['x_handle']) ? ' ' . $options['x_handle'] : '';
+                $x_text = urlencode(str_replace('{URL}', '', $final_text) . $x_handle);
+                $url = "https://x.com/intent/tweet?text={$x_text}&url={$encoded_url}";
+                break;
+        }
+
+        $buttons_html .= sprintf(
+            '<a href="%s" target="_blank" rel="noopener noreferrer" class="esb-button esb-button-%s">%s</a>',
+            esc_url($url),
+            esc_attr($id),
+            esc_html($label)
+        );
+    }
+
+    $buttons_html .= '</div>';
+    return $buttons_html;
+}
+
+/* --- Fonctions de Hook pour l'affichage automatique (CORRIGÉES) --- */
+
+function esb_add_buttons_before_content($content) {
+    // On utilise is_singular('post') pour ne cibler que les articles.
+    if (is_singular('post')) {
+        return esb_get_buttons_html() . $content;
+    }
+    return $content;
+}
+
+function esb_add_buttons_after_content($content) {
+    if (is_singular('post')) {
+        return $content . esb_get_buttons_html();
+    }
+    return $content;
+}
+
+function esb_add_buttons_before_and_after($content) {
+     if (is_singular('post')) {
+        $buttons = esb_get_buttons_html();
+        return $buttons . $content . $buttons;
+    }
+    return $content;
+}

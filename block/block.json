@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "esb/effi-share-buttons",
+    "title": "effi Share Buttons",
+    "category": "widgets",
+    "description": "Displays the share buttons based on global settings.",
+    "icon": "share",
+    "textdomain": "effi-share-buttons",
+    "editorScript": "file:./index.js",
+    "attributes": {},
+    "render": "esb_get_buttons_html"
+}
