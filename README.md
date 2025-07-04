@@ -1,7 +1,7 @@
 # effi Share Buttons
 
 * **Contributeurs :** Cédric GIRARD
-* **Version :** 1.4.0
+* **Version :** 1.5.0
 * **Requiert WordPress :** 5.8 ou supérieur
 * **Testé jusqu'à :** 6.8
 * **Licence :** GPLv2 ou ultérieure
@@ -31,6 +31,7 @@ En plus des partages classiques sur les réseaux sociaux comme X (Twitter) et Li
 * **Stylisation avancée** :
     * Ajustez la taille, l'alignement et la forme (arrondie ou carrée) des boutons.
     * Définissez des couleurs de fond et de texte personnalisées pour chaque service.
+    * Ajouter en option un titre entièrement personnalisable avant les boutons
 * **Accessible** : Utilise des balises `<button>` sémantiques pour une meilleure accessibilité sans impacter négativement le SEO.
 * **Léger et performant** : Le plugin charge les scripts et les styles de manière conditionnelle et optimisée.
 
@@ -72,6 +73,10 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 
 ## Changelog
+
+### 1.5.0
+
+* **Amélioration** : Possibilité (en option) d'ajouter un titre au-dessus des boutons, avec personnalisation du texte, de la couleur, de la taille et de l'emphase (gras, italique)
 
 ### 1.4.0
 
