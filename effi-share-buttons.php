@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       effi Share Buttons
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
- * Version:           1.3
+ * Version:           1.4
  * Author:            Cédric GIRARD
  * Text Domain:       effi-share-buttons
  */
@@ -18,7 +18,7 @@ require_once plugin_dir_path(__FILE__) . 'admin/settings-page.php';
 require_once plugin_dir_path(__FILE__) . 'public/display-buttons.php';
 require_once plugin_dir_path(__FILE__) . 'public/dynamic-styles.php';
 
-// ---- Fonctions utilitaires (inchangé) ----
+// ---- Fonctions utilitaires ----
 function esb_get_available_services() {
     return [
         'chatgpt' => 'ChatGPT',
@@ -28,6 +28,7 @@ function esb_get_available_services() {
         'whatsapp' => 'WhatsApp',
         'linkedin' => 'LinkedIn',
         'x' => 'X (Twitter)',
+        'facebook' => 'Facebook', 
     ];
 }
 
@@ -95,6 +96,22 @@ function esb_enqueue_frontend_assets() {
         '1.0.0', // Version
         true // Charger dans le pied de page
     );
+	
+	// Récupérer le contenu brut de l'article
+    $post_id = get_the_ID();
+    $raw_content = get_post_field('post_content', $post_id);
+    
+    // Nettoyer le contenu : supprimer les balises HTML et les shortcodes
+    $clean_content = wp_strip_all_tags(strip_shortcodes($raw_content));
+    
+    // Préparer les données à envoyer au script
+    $data_for_script = [
+        'post_content' => $clean_content,
+    ];
+
+    // Envoyer les données au script 'esb-frontend-script'
+    // Elles seront accessibles via l'objet JavaScript `esb_data`
+    wp_localize_script('esb-frontend-script', 'esb_data', $data_for_script);
 }
 
 // ---- Chargement des styles (inchangé) ----

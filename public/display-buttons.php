@@ -58,8 +58,15 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
         $url = '#';
         switch ($id) {
             case 'chatgpt':
-                $url = 'https://chat.openai.com/?q=' . $encoded_text;
-                break;
+                // Pour ChatGPT, on ne génère pas d'URL ici.
+                // On prépare le bouton pour qu'il soit géré par le JavaScript.
+                $buttons_html .= sprintf(
+                    '<button type="button" class="esb-button esb-share-button esb-button-chatgpt" data-action="share-content" data-service="chatgpt" data-prompt="%s">%s</button>',
+                    esc_attr($final_text), // Le prompt est stocké ici
+                    esc_html($label)
+                );
+                // On utilise 'continue 2' pour sauter directement à la prochaine itération de la boucle foreach
+                continue 2;
             case 'perplexity':
                 $url = 'https://www.perplexity.ai/search?q=' . $encoded_text;
                 break;
@@ -79,6 +86,9 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
                 $x_handle = isset($options['x_handle']) ? ' ' . $options['x_handle'] : '';
                 $x_text = urlencode(str_replace('{URL}', '', $final_text) . $x_handle);
                 $url = "https://x.com/intent/tweet?text={$x_text}&url={$encoded_url}";
+                break;
+			case 'facebook':
+                $url = "https://www.facebook.com/sharer/sharer.php?u={$encoded_url}";
                 break;
         }
 

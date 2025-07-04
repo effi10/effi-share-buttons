@@ -168,9 +168,15 @@ function esb_prompt_field_cb($args) {
     ];
     $value = isset($options['prompts'][$id]) ? esc_attr($options['prompts'][$id]) : $defaults[$id];
     
-    if ($id === 'linkedin') {
-        echo '<p class="description">LinkedIn sharing does not support custom text via URL.</p>';
+    if ($id === 'linkedin' || $id === 'facebook') {
+        echo '<p class="description">LinkedIn and Facebook sharing does not support custom text via URL.</p>';
         return;
+    }
+
+    if ($id === 'chatgpt') {
+		echo "<input type='text' name='esb_settings[prompts][{$id}]' value='{$value}' class='regular-text'>";
+		echo '<p class="description">Use {URL} for the post link, {CONTENT} for the content and {TITLE} for the post title.<br />ChatGPT in free version does not accept URLs.</p>';	
+		return;
     }
 
     echo "<input type='text' name='esb_settings[prompts][{$id}]' value='{$value}' class='regular-text'>";
@@ -220,6 +226,7 @@ function esb_colors_field_cb($args) {
         'whatsapp' => ['bg' => '#25D366', 'text' => '#ffffff'],
         'linkedin' => ['bg' => '#0077b5', 'text' => '#ffffff'],
         'x' => ['bg' => '#000000', 'text' => '#ffffff'],
+        'facebook' => ['bg' => '#1877F2', 'text' => '#ffffff'],
     ];
     
     $bg_color = isset($options['colors'][$id]['bg']) ? esc_attr($options['colors'][$id]['bg']) : $defaults[$id]['bg'];

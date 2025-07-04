@@ -27,6 +27,7 @@ function esb_enqueue_dynamic_styles() {
             'whatsapp'   => ['bg' => '#25D366', 'text' => '#ffffff'],
             'linkedin'   => ['bg' => '#0077b5', 'text' => '#ffffff'],
             'x'          => ['bg' => '#000000', 'text' => '#ffffff'],
+			'facebook'   => ['bg' => '#1877F2', 'text' => '#ffffff'],
         ],
     ];
 
