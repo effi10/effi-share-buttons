@@ -61,14 +61,34 @@ function esb_enqueue_dynamic_styles() {
     $font_size = $size_map[$button_size]['font-size'];
     $radius    = $radius_map[$border_radius];
 
+	$alignment_map = [
+        'left' => 'flex-start',
+        'center' => 'center',
+        'right' => 'flex-end',
+    ];
+    $alignment_value = $options['alignment'] ?? 'left';
+    $flex_alignment = $alignment_map[$alignment_value];
+
     $css = "
-    .esb-container {
+    .esb-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: {$flex_alignment};
+        gap: 15px; /* Espace entre le titre et les boutons */
         margin: 20px 0;
+    }
+    .esb-title {
+        margin: 0;
+        padding: 0;
+        line-height: 1.2;
+    }
+    .esb-container {
+        margin: 0;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
         align-items: center;
-        justify-content: {$justify_content}; /* LIGNE MODIFIÉE/AJOUTÉE */
+        justify-content: {$flex_alignment}; /* On garde au cas où le flex-wrap crée plusieurs lignes */
     }
     .esb-button {
         display: inline-block;

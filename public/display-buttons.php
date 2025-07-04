@@ -15,7 +15,6 @@ if (!defined('WPINC')) {
  */
 function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
 	
-    // --- CORRECTION : Obtenir l'ID du post de manière fiable ---
     $post_id = 0;
     if (isset($block->context['postId'])) {
         // Méthode N°1 : La plus fiable pour un bloc dynamique.
@@ -29,13 +28,34 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
     if (!$post_id) {
         return '';
     }
-    // --- FIN DE LA CORRECTION ---
 
     $options = get_option('esb_settings', []);
     $active_buttons = isset($options['active_buttons']) ? $options['active_buttons'] : [];
 
     if (empty($active_buttons)) {
         return ''; // Ne rien afficher si aucun bouton n'est actif.
+    }
+
+	$title_html = '';
+    if (!empty($options['title_enabled'])) {
+        $text = !empty($options['title_text']) ? $options['title_text'] : 'Summarize or share this post:';
+        $tag = !empty($options['title_tag']) ? $options['title_tag'] : 'h3';
+        
+        $inline_style = '';
+        if (strtolower($tag) === 'span') {
+            if (!empty($options['title_span_color'])) { $inline_style .= 'color:' . esc_attr($options['title_span_color']) . ';'; }
+            if (!empty($options['title_span_size'])) { $inline_style .= 'font-size:' . esc_attr($options['title_span_size']) . 'px;'; }
+            if (!empty($options['title_span_bold'])) { $inline_style .= 'font-weight:bold;'; }
+            if (!empty($options['title_span_italic'])) { $inline_style .= 'font-style:italic;'; }
+        }
+        
+        // `tag_escape` est utilisé pour sécuriser le nom de la balise
+        $title_html = sprintf(
+            '<%1$s class="esb-title" style="%2$s">%3$s</%1$s>',
+            tag_escape($tag),
+            esc_attr($inline_style),
+            esc_html($text)
+        );
     }
 
     $post_url = get_permalink($post_id);
@@ -102,7 +122,10 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
     }
 
     $buttons_html .= '</div>';
-    return $buttons_html;
+    
+	// On retourne le titre et les boutons dans un conteneur global
+    return sprintf('<div class="esb-wrapper">%s%s</div>', $title_html, $buttons_html);
+
 }
 
 /* --- Fonctions de Hook pour l'affichage automatique (Inchangées) --- */
