@@ -1,11 +1,11 @@
 # effi Share Buttons
 
-**Contributeurs :** Cédric GIRARD
-**Version :** 1.3.0
-**Requiert WordPress :** 5.8 ou supérieur
-**Testé jusqu'à :** 6.8
-**Licence :** GPLv2 ou ultérieure
-**URI de la licence :** https://www.gnu.org/licenses/gpl-2.0.html
+* **Contributeurs :** Cédric GIRARD
+* **Version :** 1.4.0
+* **Requiert WordPress :** 5.8 ou supérieur
+* **Testé jusqu'à :** 6.8
+* **Licence :** GPLv2 ou ultérieure
+* **URI de la licence :** https://www.gnu.org/licenses/gpl-2.0.html
 
 Un plugin WordPress pour ajouter des boutons de partage hautement personnalisables, orientés vers les réseaux sociaux traditionnels et les plateformes d'intelligence artificielle.
 > Largement inspiré du travail de Metehan Yesilyurt (base Github : https://github.com/metehan777/ai-llm-share-wp-plugin ; Article à lire impérativement : https://metehan.ai/blog/citemet-ai-share-buttons-growth-hack-for-llms/)
@@ -27,7 +27,7 @@ En plus des partages classiques sur les réseaux sociaux comme X (Twitter) et Li
     * Affichez les boutons automatiquement avant le contenu, après, ou les deux.
     * Utilisez le bloc Gutenberg "effi Share Buttons" pour placer manuellement les boutons où vous le souhaitez.
 * **Contrôle total du ciblage** : Choisissez précisément les types de contenu (articles, pages, produits...) sur lesquels les boutons doivent s'afficher automatiquement.
-* **Personnalisation des prompts** : Modifiez le texte de partage pour chaque service en utilisant les placeholders `{TITLE}` et `{URL}`.
+* **Personnalisation des prompts** : Modifiez le texte de partage pour chaque service en utilisant les placeholders `{TITLE}` et `{URL}`. et même `{CONTENT}` concernant ChatGPT (la version gratuite ne permettant pas de lire une URL, vous avez la liberté de choisir !)
 * **Stylisation avancée** :
     * Ajustez la taille, l'alignement et la forme (arrondie ou carrée) des boutons.
     * Définissez des couleurs de fond et de texte personnalisées pour chaque service.
@@ -73,13 +73,19 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 ## Changelog
 
+### 1.4.0
+
+* **Amélioration** : Possibilité de transmettre le contenu concernant ChatGPT, car il n'accepte pas les URL en mode gratuit (au choix de l'administrateur du site) ; ce dernier est apuré et réduit au maximum, du fait de la limite des longueurs possibles d'URL
+* **Amélioration** : Tronquage des URL à 2028 caractères (limite technique acceptable par les navigateurs)
+* **Fonctionnalité** : Ajout d'un bouton pour le partage sur Facebook (évite de recourir à d'autres plugins pour le partage social)
+
 ### 1.3.0
 
 * **Fonctionnalité** : Ajout d'une option pour sélectionner les types de publication pour l'affichage automatique.
 
 ### 1.2.0
 
-* **Amélioration** : Remplacement des liens `<a>` par des balises `<button>` pour une meilleure accessibilité.
+* **Amélioration** : Remplacement des liens `<a>` par des balises `<button>` pour une meilleure accessibilité et un meilleur SEO (évite les fuites de PageRank).
 * **Fonctionnalité** : Ajout d'une option pour définir l'alignement des boutons (gauche, centre, droite).
 * **Correctif** : La couleur des boutons est maintenant préservée au survol (`:hover`), ignorant les styles du thème.
 
