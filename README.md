@@ -10,6 +10,7 @@
 Un plugin WordPress pour ajouter des boutons de partage hautement personnalisables, orientés vers les réseaux sociaux traditionnels et les plateformes d'intelligence artificielle.
 > Largement inspiré du travail de Metehan Yesilyurt (base Github : https://github.com/metehan777/ai-llm-share-wp-plugin ; Article à lire impérativement : https://metehan.ai/blog/citemet-ai-share-buttons-growth-hack-for-llms/)
 
+![image](https://github.com/user-attachments/assets/903c3afa-630b-44aa-bf86-a4d12b2f5704)
 
 
 ## Description
