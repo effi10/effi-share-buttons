@@ -1,9 +1,11 @@
 <?php
 /**
  * Plugin Name:       effi Share Buttons
+ * Plugin URI:	      https://www.effi10.com/wordpress-plugin-de-partage-llm-et-reseaux-sociaux/
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
  * Version:           1.5
  * Author:            Cédric GIRARD
+ * Author URI:	      https://www.effi10.com/
  * Text Domain:       effi-share-buttons
  */
 
