@@ -1,7 +1,7 @@
 # effi Share Buttons
 
 * **Contributeurs :** Cédric GIRARD
-* **Version :** 1.5.0
+* **Version :** 1.6.0
 * **Requiert WordPress :** 5.8 ou supérieur
 * **Testé jusqu'à :** 6.8
 * **Licence :** GPLv2 ou ultérieure
@@ -74,6 +74,11 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 
 ## Changelog
+
+### 1.6.0
+
+* ** Correctif** : Vérification de l'ID du post en cours pour éviter l'apparition des boutons dans des boucles de posts insérées dans d'autres single posts
+* **Fonctionnalité** : Ajout d'un bouton pour Claude IA
 
 ### 1.5.0
 
