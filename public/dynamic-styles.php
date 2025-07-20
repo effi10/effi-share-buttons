@@ -28,6 +28,7 @@ function esb_enqueue_dynamic_styles() {
             'linkedin'   => ['bg' => '#0077b5', 'text' => '#ffffff'],
             'x'          => ['bg' => '#000000', 'text' => '#ffffff'],
 			'facebook'   => ['bg' => '#1877F2', 'text' => '#ffffff'],
+            'claude'     => ['bg' => '#D96B3A', 'text' => '#ffffff'], // Couleur orange pour Claude (Anthropic)
         ],
     ];
 

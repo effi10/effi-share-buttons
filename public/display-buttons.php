@@ -110,6 +110,9 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
 			case 'facebook':
                 $url = "https://www.facebook.com/sharer/sharer.php?u={$encoded_url}";
                 break;
+            case 'claude':
+                $url = 'https://claude.ai/new?q=' . $encoded_text;
+                break;
         }
 
         // Affichage du bouton 
@@ -135,7 +138,7 @@ function esb_add_buttons_before_content($content) {
     // On récupère les clés du tableau (ex: ['post', 'page']) ou on utilise ['post'] par défaut.
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
 
-    if (is_singular($selected_post_types)) {
+    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
         return esb_get_buttons_html() . $content;
     }
     return $content;
@@ -145,7 +148,7 @@ function esb_add_buttons_after_content($content) {
     $options = get_option('esb_settings', []);
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
     
-    if (is_singular($selected_post_types)) {
+    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
         return $content . esb_get_buttons_html();
     }
     return $content;
@@ -155,7 +158,7 @@ function esb_add_buttons_before_and_after($content) {
     $options = get_option('esb_settings', []);
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
 
-    if (is_singular($selected_post_types)) {
+    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
         $buttons = esb_get_buttons_html();
         return $buttons . $content . $buttons;
     }

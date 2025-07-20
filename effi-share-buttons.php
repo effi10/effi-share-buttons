@@ -1,11 +1,9 @@
 <?php
 /**
  * Plugin Name:       effi Share Buttons
- * Plugin URI:	      https://www.effi10.com/wordpress-plugin-de-partage-llm-et-reseaux-sociaux/
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
- * Version:           1.5
+ * Version:           1.6
  * Author:            Cédric GIRARD
- * Author URI:	      https://www.effi10.com/
  * Text Domain:       effi-share-buttons
  */
 
@@ -26,6 +24,7 @@ function esb_get_available_services() {
         'chatgpt' => 'ChatGPT',
         'perplexity' => 'Perplexity',
         'grok' => 'Grok',
+        'claude' => 'Claude',
         'google_ai' => 'Google AI',
         'whatsapp' => 'WhatsApp',
         'linkedin' => 'LinkedIn',
