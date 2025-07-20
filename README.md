@@ -77,7 +77,7 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 ### 1.6.0
 
-* ** Correctif** : Vérification de l'ID du post en cours pour éviter l'apparition des boutons dans des boucles de posts insérées dans d'autres single posts
+* **Correctif** : Vérification de l'ID du post en cours pour éviter l'apparition des boutons dans des boucles de posts insérées dans d'autres single posts
 * **Fonctionnalité** : Ajout d'un bouton pour Claude IA
 
 ### 1.5.0
