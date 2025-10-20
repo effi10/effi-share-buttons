@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       effi Share Buttons
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
- * Version:           1.6
+ * Version:           1.6.1
  * Author:            Cédric GIRARD
  * Text Domain:       effi-share-buttons
  */
@@ -117,4 +117,5 @@ function esb_enqueue_frontend_assets() {
 
 // ---- Chargement des styles (inchangé) ----
 // Cette partie était déjà correcte. Elle ne s'exécute que sur le front-office.
+
 add_action('wp_enqueue_scripts', 'esb_enqueue_frontend_assets');
