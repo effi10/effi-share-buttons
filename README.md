@@ -1,7 +1,7 @@
 # effi Share Buttons
 
 * **Contributeurs :** Cédric GIRARD
-* **Version :** 1.6.0
+* **Version :** 1.6.1
 * **Requiert WordPress :** 5.8 ou supérieur
 * **Testé jusqu'à :** 6.8
 * **Licence :** GPLv2 ou ultérieure
@@ -74,6 +74,10 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 
 ## Changelog
+
+### 1.6.1
+
+* **Correctif** : Modification de l'URL d'appel de ChatGPT (liée à la redirection de chat.openai.com vers chatgpt.com)
 
 ### 1.6.0
 
