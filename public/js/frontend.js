@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // On utilise notre nouvelle fonction de nettoyage
                 const slugifiedText = esbSlugifyTextForUrl(finalText);
                 
-                urlToOpen = 'https://chat.openai.com/?q=' + slugifiedText;
+                urlToOpen = 'https://chatgpt.com/?q=' + slugifiedText;
 
             } else {
                 // CAS NORMAL : Pour tous les autres boutons
@@ -55,4 +55,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
 });
