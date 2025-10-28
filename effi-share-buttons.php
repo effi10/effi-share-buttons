@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       effi Share Buttons
  * Description:       Adds highly customizable share buttons for social networks and AI platforms.
- * Version:           1.6.1
+ * Version:           1.6.2
  * Author:            Cédric GIRARD
  * Text Domain:       effi-share-buttons
  */
