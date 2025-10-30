@@ -1,7 +1,7 @@
 # effi Share Buttons
 
 * **Contributeurs :** Cédric GIRARD
-* **Version :** 1.6.2
+* **Version :** 1.6.3
 * **Requiert WordPress :** 5.8 ou supérieur
 * **Testé jusqu'à :** 6.8
 * **Licence :** GPLv2 ou ultérieure
