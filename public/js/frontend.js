@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // On utilise notre nouvelle fonction de nettoyage
                 const slugifiedText = esbSlugifyTextForUrl(finalText);
                 
-                urlToOpen = 'https://chatgpt.com/?q=' + slugifiedText;
+                urlToOpen = 'https://chatgpt.com/?hints=search&q=' + slugifiedText;
 
             } else {
                 // CAS NORMAL : Pour tous les autres boutons

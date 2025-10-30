@@ -75,6 +75,10 @@ Tous les réglages se trouvent dans le menu **Réglages > effi Share Buttons** d
 
 ## Changelog
 
+### 1.6.3
+
+* **Correctif** : Correction d'un bug sur les post types insérés programmatiquement dans d'autres post types (affichage multiple des boutons de partage)
+
 ### 1.6.2
 
 * **Correctif** : Ajout du paramètre hints dans l'URL vers chatgpt.com

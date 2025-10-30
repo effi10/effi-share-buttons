@@ -29,11 +29,36 @@ function esb_get_buttons_html($attributes = [], $content = '', $block = null) {
         return '';
     }
 
+    // Empêcher l'affichage quand on n'est pas sur l'objet de requête principal
+    // (ex: contenu d'un autre post inséré via shortcode ou requête imbriquée)
+    if ($post_id !== get_queried_object_id()) {
+        return '';
+    }
+
+    // Affichage automatique: ne rendre qu'une seule fois par article (évite les doublons en contenu imbriqué)
+    $options_for_once = get_option('esb_settings', []);
+    $position_for_once = isset($options_for_once['position']) ? $options_for_once['position'] : 'after_content';
+    $automatic_mode_enabled = ($position_for_once !== 'block_only');
+    if ($automatic_mode_enabled) {
+        static $rendered_once_for_post = [];
+        if (isset($rendered_once_for_post[$post_id])) {
+            return '';
+        }
+        $rendered_once_for_post[$post_id] = true;
+    }
+
     $options = get_option('esb_settings', []);
     $active_buttons = isset($options['active_buttons']) ? $options['active_buttons'] : [];
+    $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
 
     if (empty($active_buttons)) {
         return ''; // Ne rien afficher si aucun bouton n'est actif.
+    }
+
+    // Respecter le filtrage par type de contenu choisi dans les réglages
+    $current_post_type = get_post_type($post_id);
+    if (!$current_post_type || !in_array($current_post_type, $selected_post_types, true)) {
+        return '';
     }
 
 	$title_html = '';
@@ -138,7 +163,7 @@ function esb_add_buttons_before_content($content) {
     // On récupère les clés du tableau (ex: ['post', 'page']) ou on utilise ['post'] par défaut.
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
 
-    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
+    if (is_singular($selected_post_types) && in_the_loop() && is_main_query() && get_the_ID() === get_queried_object_id()) {
         return esb_get_buttons_html() . $content;
     }
     return $content;
@@ -148,7 +173,7 @@ function esb_add_buttons_after_content($content) {
     $options = get_option('esb_settings', []);
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
     
-    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
+    if (is_singular($selected_post_types) && in_the_loop() && is_main_query() && get_the_ID() === get_queried_object_id()) {
         return $content . esb_get_buttons_html();
     }
     return $content;
@@ -158,7 +183,7 @@ function esb_add_buttons_before_and_after($content) {
     $options = get_option('esb_settings', []);
     $selected_post_types = isset($options['post_types']) ? array_keys($options['post_types']) : ['post'];
 
-    if (is_singular($selected_post_types) && get_the_ID() === get_queried_object_id()) {
+    if (is_singular($selected_post_types) && in_the_loop() && is_main_query() && get_the_ID() === get_queried_object_id()) {
         $buttons = esb_get_buttons_html();
         return $buttons . $content . $buttons;
     }
